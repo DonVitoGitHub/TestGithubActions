@@ -10,4 +10,5 @@ Test with github actions and a yocto-container
     1. docker/setup-qemu-action@v1: for qemu emulation in github actions to start the yocto container with platform linux/arm64
     2. actions/checkout@v3: for checkout the repo
     3. addnab/docker-run-action@v3: run the yocto container with platform linux/arm64
+        1. the github token for login into github packages to pull the docker container inside github actions must be set in the repo settings (secrets)
 
