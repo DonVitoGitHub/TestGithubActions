@@ -1,0 +1,60 @@
+on: [push, pull_request]
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    steps:        
+      - name: install qemu
+        id: qemu-aarch64
+        uses: docker/setup-qemu-action@v1
+        with:
+          image: tonistiigi/binfmt:latest
+          platforms: arm64
+          
+      - name: checkout repo
+        uses: actions/checkout@v3 
+          
+      - name: run container with qemuarm64 
+        uses: addnab/docker-run-action@v3
+        with:
+          username: ${{ github.actor }}
+          password: ${{ secrets.REGISTRY_TOKEN }}
+          registry: ghcr.io
+          image: ghcr.io/donvitogithub/cicd-car-camera-module:latest
+          options: |
+            --rm  
+            --platform linux/arm64
+            -v ${{ github.workspace }}:/data
+          run: |
+            echo "check compiler-----------------"
+            which gcc
+            which g++
+            
+            echo "check googletest---------------"
+            ls /usr/include 
+            
+            echo "check repo data----------------"
+            ls /data
+            
+            echo "compile repo-------------------"
+            cd /data
+            mkdir build
+            cd build
+            cmake ..
+            
+            echo "run gtests---------------------"
+            cd test
+            make
+            ls
+            ./myTest
+            
+          
+
+
+      
+          
+        
+        
+      
+    
+
